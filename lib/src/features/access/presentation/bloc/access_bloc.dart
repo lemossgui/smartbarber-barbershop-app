@@ -1,57 +1,53 @@
 import 'package:barbershop/barbershop.dart';
 import 'package:core/core.dart';
-import 'package:get/get.dart';
 
-enum AuthenticationStreams {
+enum AccessStreams {
   email,
   password,
   isPasswordVisible,
 }
 
-class AuthenticationBloC extends BloC<AuthenticationEvent>
-    with RequiredStringStreamValidator {
+class AccessBloC extends BloC<AccessEvent> with RequiredStringStreamValidator {
   static const route = '/authentication';
 
-  final AuthenticationRepository<BarbershopCredentialModel> repository;
+  final AccessRepository repository;
   final SessionRepository sessionRepository;
 
-  AuthenticationBloC({
+  AccessBloC({
     required this.repository,
     required this.sessionRepository,
   });
 
   @override
   void onInit() {
-    _dispatchEmail('guilherme@gmail.com');
-    _dispatchPassword('123456');
     _setupRequiredFields();
     super.onInit();
   }
 
-  String? get _email => map[AuthenticationStreams.email];
-  String? get _password => map[AuthenticationStreams.password];
+  String? get _email => map[AccessStreams.email];
+  String? get _password => map[AccessStreams.password];
 
   void _dispatchEmail(String? value) {
-    dispatch<String?>(value, key: AuthenticationStreams.email);
+    dispatch<String?>(value, key: AccessStreams.email);
   }
 
   void _dispatchPassword(String? value) {
-    dispatch<String?>(value, key: AuthenticationStreams.password);
+    dispatch<String?>(value, key: AccessStreams.password);
   }
 
   void _setupRequiredFields() {
     addTransformOn<String?, String?>(
       requiredStringStreamValidator(),
-      key: AuthenticationStreams.email,
+      key: AccessStreams.email,
     );
     addTransformOn<String?, String?>(
       requiredStringStreamValidator(),
-      key: AuthenticationStreams.password,
+      key: AccessStreams.password,
     );
   }
 
   @override
-  void handleEvent(AuthenticationEvent event) {
+  void handleEvent(AccessEvent event) {
     if (event is Authenticate) {
       _doLogin();
     } else if (event is NavigateToRegister) {
@@ -76,7 +72,7 @@ class AuthenticationBloC extends BloC<AuthenticationEvent>
       return;
     }
 
-    final credentials = BarbershopCredentialModel(
+    final credentials = AccessModel(
       email: _email!,
       password: _password!,
     );
@@ -102,6 +98,6 @@ class AuthenticationBloC extends BloC<AuthenticationEvent>
   }
 
   void _navigateToRegister() async {
-    await dialog(LoadingDialog(message: 'Aguarde'));
+    toNamed(EmailVerificationBloC.route);
   }
 }

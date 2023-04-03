@@ -1,5 +1,7 @@
 name: barbershop
 
+publish_to: none
+
 version: 0.0.1+1
 
 environment:
@@ -13,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg_provider: ^1.0.3
   get: ^4.6.1
+  lottie: ^2.0.0
   core:
     path: ../smartbarber-core-app
 

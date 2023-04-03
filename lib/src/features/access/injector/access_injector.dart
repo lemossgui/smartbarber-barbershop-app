@@ -1,30 +1,30 @@
 import 'package:barbershop/barbershop.dart';
 import 'package:core/core.dart';
 
-class AuthenticationInjector extends Injector {
+class AccessInjector extends Injector {
   @override
   void dependencies() {
     /// Mapper
     put(
-      BarbershopCredentialMapper(),
+      AccessMapper(),
     );
 
     /// Datasources
-    put<AuthenticationStore<BarbershopCredentialModel>>(
-      AuthenticationRemoteImpl(
+    put<AccessStore>(
+      AccessRemoteImpl(
         mapper: find(),
       ),
     );
 
     /// Repositories
-    put<AuthenticationRepository<BarbershopCredentialModel>>(
-      AuthenticationRepositoryImpl<BarbershopCredentialModel>(
+    put<AccessRepository>(
+      AccessRepositoryImpl(
         remote: find(),
       ),
     );
 
     lazyPut(
-      () => AuthenticationBloC(
+      () => AccessBloC(
         repository: find(),
         sessionRepository: find(),
       ),

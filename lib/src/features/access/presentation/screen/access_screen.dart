@@ -3,8 +3,8 @@ import 'package:barbershop/barbershop.dart';
 import 'package:flutter/material.dart';
 import 'package:core/core.dart';
 
-class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+class AccessScreen extends ScreenView<AccessBloC> {
+  const AccessScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,7 @@ class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
           mainAxisSize: MainAxisSize.max,
           children: [
             _buildImage(context),
+            _buildTitle(context),
             _buildEmailField(),
             _buildPasswordField(),
             _buildAccessButton(context),
@@ -40,16 +41,47 @@ class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
     );
   }
 
+  Widget _buildTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(
+            'SmartBarber',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Expanded(child: Divider()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  'Barbearia',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+              const Expanded(child: Divider()),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmailField() {
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
-      child: StreamTextField(
+      child: MyTextFormField(
         stream: bloc.streamOf<String?>(
-          key: AuthenticationStreams.email,
+          key: AccessStreams.email,
         ),
         onChanged: (value) => bloc.dispatch<String?>(
           value,
-          key: AuthenticationStreams.email,
+          key: AccessStreams.email,
         ),
         hintText: 'E-mail',
         keyboardType: TextInputType.emailAddress,
@@ -60,20 +92,20 @@ class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
   Widget _buildPasswordField() {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
-      child: StreamPasswordField(
-        textStream: bloc.streamOf<String?>(
-          key: AuthenticationStreams.password,
+      child: MyPasswordField(
+        stream: bloc.streamOf<String?>(
+          key: AccessStreams.password,
         ),
-        onTextChanged: (value) => bloc.dispatch<String?>(
+        onChanged: (value) => bloc.dispatch<String?>(
           value,
-          key: AuthenticationStreams.password,
+          key: AccessStreams.password,
         ),
         visibilityStream: bloc.streamOf<bool?>(
-          key: AuthenticationStreams.isPasswordVisible,
+          key: AccessStreams.isPasswordVisible,
         ),
         onVisibilityChanged: (value) => bloc.dispatch<bool?>(
           value,
-          key: AuthenticationStreams.isPasswordVisible,
+          key: AccessStreams.isPasswordVisible,
         ),
         hintText: 'Senha',
       ),
@@ -83,9 +115,10 @@ class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
   Widget _buildAccessButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
-      child: ElevatedPersistentButton(
-        bloc: bloc,
+      child: MyElevatedButton(
         text: 'Acessar',
+        color: Theme.of(context).colorScheme.primaryContainer,
+        textColor: Theme.of(context).colorScheme.onPrimaryContainer,
         onPressed: () => bloc.dispatchEvent(Authenticate()),
       ),
     );
@@ -118,11 +151,10 @@ class AuthenticationScreen extends ScreenView<AuthenticationBloC> {
   }
 
   Widget _buildRegisterButton(BuildContext context) {
-    return ElevatedPersistentButton(
-      bloc: bloc,
+    return MyElevatedButton(
       text: 'Cadastrar',
-      color: Theme.of(context).colorScheme.tertiary,
-      textColor: Theme.of(context).colorScheme.onTertiary,
+      color: Theme.of(context).colorScheme.tertiaryContainer,
+      textColor: Theme.of(context).colorScheme.onTertiaryContainer,
       onPressed: () => bloc.dispatchEvent(NavigateToRegister()),
     );
   }

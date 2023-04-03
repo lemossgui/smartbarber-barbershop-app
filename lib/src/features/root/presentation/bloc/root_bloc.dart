@@ -22,7 +22,7 @@ class RootBloC extends BloC<RootEvent> {
     if (isLogged) {
       popAndToNamed(HomeBloC.route);
     } else {
-      popAndToNamed(AuthenticationBloC.route);
+      popAndToNamed(AccessBloC.route);
     }
   }
 
